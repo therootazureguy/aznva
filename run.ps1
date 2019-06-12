@@ -231,14 +231,17 @@ Function Get-Subscriptions
 #--------------------------------------------------------------------------
 # Main code block for Azure function app                       
 #--------------------------------------------------------------------------
-
+echo "loading variables"
 $Password = ConvertTo-SecureString $env:SP_PASSWORD -AsPlainText -Force
 $Credential = New-Object System.Management.Automation.PSCredential ($env:SP_USERNAME, $Password)
 $AzureEnv = Get-AzureRmEnvironment -Name $env:AZURECLOUD
+echo "environment set"
+echo "loading azure service principal"
 Add-AzureRmAccount -ServicePrincipal -Tenant $env:TENANTID -Credential $Credential -SubscriptionId $env:SUBSCRIPTIONID -Environment $AzureEnv
-
+echo "getting context"
 $Context = Get-AzureRmContext
 Set-AzureRmContext -Context $Context
+echo "context set"
 
 $Script:PrimaryInts = @()
 $Script:SecondaryInts = @()
@@ -252,10 +255,10 @@ $FW1Down = $True
 $FW2Down = $True
 
 $VMS = Get-AzureRmVM
-
+echo "calling functions."
 Get-Subscriptions
 Get-FWInterfaces
-
+echo "function call complete"
 # Test primary and secondary NVA firewall status 
 Write-Output "testing for primary and secondary..."
 For ($Ctr = 1; $Ctr -le $IntTries; $Ctr++)
