@@ -257,7 +257,7 @@ Get-Subscriptions
 Get-FWInterfaces
 
 # Test primary and secondary NVA firewall status 
-
+Write-Output "testing for primary and secondary..."
 For ($Ctr = 1; $Ctr -le $IntTries; $Ctr++)
 {
   
